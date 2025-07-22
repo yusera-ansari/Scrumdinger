@@ -9,13 +9,14 @@
 import SwiftUI
 
 struct ScrumsView: View {
-    let scrums : [DailyScrum]
+    @Binding var scrums: [DailyScrum]
     var body: some View {
         NavigationStack{
-         
-                List(scrums){ scrum in
+            //            The List view passes a scrum into its closure, but the DetailView initializer expects a binding to a scrum. You’ll use array binding syntax to retrieve a binding to an individual scrum. To use array binding syntax in SwiftUI, you’ll pass a binding to an array into a List.
+            
+                List($scrums){ $scrum in
                     
-                    NavigationLink(destination: DetailView(scrum: scrum)) {
+                    NavigationLink(destination: DetailView(scrum: $scrum)) {
                     CardView(scrum: scrum)
                        
                 } .listRowBackground(scrum.theme.mainColor)
@@ -33,6 +34,6 @@ struct ScrumsView: View {
 }
 
 #Preview {
-    let scrums = DailyScrum.sampleData
-    ScrumsView(scrums: scrums)
+    @Previewable @State var scrums = DailyScrum.sampleData
+    ScrumsView(scrums: $scrums)
 }

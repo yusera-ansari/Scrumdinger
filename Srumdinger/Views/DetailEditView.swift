@@ -9,8 +9,9 @@ import SwiftUI
 
 //Declare @State properties as private so that they can be accessed only within the view in which you define them.
 struct DetailEditView: View {
-    @State private var scrum : DailyScrum = DailyScrum.emptyScrum
+    @Binding  var scrum : DailyScrum
     @State private var attendeeName = ""
+    
     var body: some View {
 //        The Form container automatically adapts the appearance of controls when it renders on different platforms.
         Form{
@@ -26,6 +27,7 @@ struct DetailEditView: View {
                     Text("\(scrum.lengthInMinutes) minutes")
                         .accessibilityHidden(true)
                 }
+                ThemePicker(selection: $scrum.theme)
             }//section end
             Section(header:Text("Attendees")){
                 ForEach(scrum.attendees){
@@ -55,5 +57,6 @@ struct DetailEditView: View {
 
 
 #Preview {
-    DetailEditView()
+    @Previewable @State var scrum = DailyScrum.sampleData[0]
+    DetailEditView(scrum:$scrum )
 }

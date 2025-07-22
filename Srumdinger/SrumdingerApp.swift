@@ -9,9 +9,10 @@ import SwiftUI
 //You create a SwiftUI app by declaring a structure that conforms to the App protocol. The app’s body property returns a Scene that contains a view hierarchy representing the primary user interface for the app.
 @main
 struct SrumdingerApp: App {
+    @State private var scrums = DailyScrum.sampleData
     var body: some Scene {
         WindowGroup {
-            ScrumsView(scrums: DailyScrum.sampleData )
+            ScrumsView(scrums:$scrums )
         }
     }
 }
