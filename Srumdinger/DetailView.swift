@@ -9,6 +9,7 @@ import SwiftUI
 //To use the same color as other interactive elements, use accentColor.
 struct DetailView: View {
     let scrum : DailyScrum
+    @State private var isPresentingEditView = false
     var body: some View {
         List {
             Section(header: Text("Meeting Info")){
@@ -40,8 +41,37 @@ struct DetailView: View {
                 }
             }//section end
             
-        }
+        }//list end
         .navigationTitle(scrum.title)
+        .toolbar{
+            Button{
+                isPresentingEditView = true
+            }label:{
+                Text("Edit")
+            }
+        }
+        .sheet(isPresented: $isPresentingEditView, content: {
+            NavigationStack{
+                DetailEditView()
+                    .navigationTitle(scrum.title)
+                    .toolbar{
+                        ToolbarItem(placement: .confirmationAction, content: {
+                            Button("Done") {
+                        isPresentingEditView = false
+                                }
+                        })
+                        ToolbarItem(placement:.cancellationAction){
+                            Button{
+                                isPresentingEditView = false
+                            }label:{
+                                Text("Cancel")
+                            }
+                        }
+                        
+                    }
+            }
+        })
+       
     }
 }
 
