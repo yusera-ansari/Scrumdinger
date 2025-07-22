@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF5EEF512E2F976D00F0B3DC /* TimerKit in Frameworks */ = {isa = PBXBuildFile; productRef = EF5EEF502E2F976D00F0B3DC /* TimerKit */; };
 		EF931C7B2E2E458900EBF7CF /* ThemeKit in Frameworks */ = {isa = PBXBuildFile; productRef = EF931C7A2E2E458900EBF7CF /* ThemeKit */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF931C7B2E2E458900EBF7CF /* ThemeKit in Frameworks */,
+				EF5EEF512E2F976D00F0B3DC /* TimerKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +128,7 @@
 			name = Srumdinger;
 			packageProductDependencies = (
 				EF931C7A2E2E458900EBF7CF /* ThemeKit */,
+				EF5EEF502E2F976D00F0B3DC /* TimerKit */,
 			);
 			productName = Srumdinger;
 			productReference = EF931C4E2E2E32D600EBF7CF /* Srumdinger.app */;
@@ -211,6 +214,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				EF931C782E2E456B00EBF7CF /* XCLocalSwiftPackageReference "ThemeKit" */,
+				EF5EEF4F2E2F975A00F0B3DC /* XCLocalSwiftPackageReference "TimerKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EF931C4F2E2E32D600EBF7CF /* Products */;
@@ -577,6 +581,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		EF5EEF4F2E2F975A00F0B3DC /* XCLocalSwiftPackageReference "TimerKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = TimerKit;
+		};
 		EF931C782E2E456B00EBF7CF /* XCLocalSwiftPackageReference "ThemeKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ThemeKit;
@@ -584,6 +592,11 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EF5EEF502E2F976D00F0B3DC /* TimerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EF5EEF4F2E2F975A00F0B3DC /* XCLocalSwiftPackageReference "TimerKit" */;
+			productName = TimerKit;
+		};
 		EF931C7A2E2E458900EBF7CF /* ThemeKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EF931C782E2E456B00EBF7CF /* XCLocalSwiftPackageReference "ThemeKit" */;
