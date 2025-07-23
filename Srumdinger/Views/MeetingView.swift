@@ -15,6 +15,7 @@ struct MeetingView: View {
     private let player = AVPlayer.dingPlayer()
     @State var scrumTimer = ScrumTimer()
     let scrum : DailyScrum
+    @Binding var errorWrapper: ErrorWrapper?
     var body: some View {
      
         ZStack{
@@ -37,15 +38,19 @@ struct MeetingView: View {
        startScrum()
         }
         .onDisappear{
-          stopScrum()
+          do{
+            try  stopScrum()
+          }catch{
+              errorWrapper = ErrorWrapper(error: error, guidance: "Meeting time was not recorded. Try again later.")
+          }
         }
         
     }//view
-    func stopScrum(){
+    func stopScrum()throws{
         scrumTimer.stopScrum()
         let newHistory = History(attendees: scrum.attendees)
         scrum.history.insert(newHistory, at: 0);
-       try? context.save()
+        try context.save()
     }
     func startScrum(){
         scrumTimer.reset(lengthInMinutes: scrum.lengthInMinutes, attendeeNames: scrum.attendees.map { $0.name })
@@ -61,5 +66,5 @@ struct MeetingView: View {
 #Preview (traits: .dailyScrumsSampleData){
 //    @Previewable @Query(sort: \DailyScrum.title) var scrums: [DailyScrum]
     let scrum = DailyScrum.sampleData[0]
-    MeetingView(scrum: scrum)
+    MeetingView(scrum: scrum,  errorWrapper: .constant(nil))
 }

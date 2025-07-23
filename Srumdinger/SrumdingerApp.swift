@@ -12,7 +12,9 @@ struct SrumdingerApp: App {
     @State private var scrums = DailyScrum.sampleData
     var body: some Scene {
         WindowGroup {
-            ScrumsView( ).modelContainer(for: DailyScrum.self)
+            ScrumsView( )
+//                .modelContainer(try! .init(for: DailyScrum.self, configurations: .init(allowsSave: false)))
+                .modelContainer(for: DailyScrum.self)
 //            Setting the model container injects a model context into your SwiftUI environment.
         }
     }

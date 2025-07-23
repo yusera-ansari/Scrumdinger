@@ -13,10 +13,11 @@ struct DetailView: View {
      let scrum: DailyScrum
     
     @State private var isPresentingEditView = false
+    @State private var errorWrapper : ErrorWrapper?
     var body: some View {
         List {
             Section(header: Text("Meeting Info")){
-                NavigationLink(destination:MeetingView(scrum: scrum)){
+                NavigationLink(destination:MeetingView(scrum: scrum, errorWrapper: $errorWrapper)){
                     Label("Start Meeting", systemImage: "timer")
                         .font(.headline)
                         .foregroundColor(.accentColor)
@@ -89,6 +90,9 @@ struct DetailView: View {
 //                        
 //                    }
             }//nav stack
+        })//sheet
+        .sheet(item: $errorWrapper, onDismiss: nil, content: { wrapper in
+            ErrorView(errorWrapper: wrapper)
         })
        
     }
