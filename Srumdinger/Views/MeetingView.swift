@@ -8,11 +8,13 @@
 import SwiftUI
 import TimerKit
 import AVFoundation
+import SwiftData
 
 struct MeetingView: View {
+    @Environment(\.modelContext) private var context
     private let player = AVPlayer.dingPlayer()
     @State var scrumTimer = ScrumTimer()
-    @Binding var scrum : DailyScrum
+    let scrum : DailyScrum
     var body: some View {
      
         ZStack{
@@ -27,26 +29,37 @@ struct MeetingView: View {
                       
             }//vstack
         }//zstack
+        
         .padding()
         .foregroundColor(scrum.theme.accentColor)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear{
-            scrumTimer.reset(lengthInMinutes: scrum.lengthInMinutes, attendeeNames: scrum.attendees.map { $0.name })
-            scrumTimer.speakerChangedAction = {
-                player.seek(to: .zero)
-                player.play()
-//                Seeking to time .zero ensures that the audio file always plays from the beginning.
-                       }
-            scrumTimer.startScrum()
+       startScrum()
         }
         .onDisappear{
-            scrumTimer.stopScrum()
+          stopScrum()
         }
         
+    }//view
+    func stopScrum(){
+        scrumTimer.stopScrum()
+        let newHistory = History(attendees: scrum.attendees)
+        scrum.history.insert(newHistory, at: 0);
+       try? context.save()
+    }
+    func startScrum(){
+        scrumTimer.reset(lengthInMinutes: scrum.lengthInMinutes, attendeeNames: scrum.attendees.map { $0.name })
+        scrumTimer.speakerChangedAction = {
+            player.seek(to: .zero)
+            player.play()
+//                Seeking to time .zero ensures that the audio file always plays from the beginning.
+                   }
+        scrumTimer.startScrum()
     }
 }
 
-#Preview {
-    @Previewable @State var scrum = DailyScrum.sampleData[0]
-    MeetingView(scrum:$scrum)
+#Preview (traits: .dailyScrumsSampleData){
+//    @Previewable @Query(sort: \DailyScrum.title) var scrums: [DailyScrum]
+    let scrum = DailyScrum.sampleData[0]
+    MeetingView(scrum: scrum)
 }

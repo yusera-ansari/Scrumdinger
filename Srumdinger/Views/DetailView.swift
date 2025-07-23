@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
+
 //To use the same color as other interactive elements, use accentColor.
 struct DetailView: View {
-    @Binding var scrum: DailyScrum
-    @State private var editingScrum = DailyScrum.emptyScrum
+     let scrum: DailyScrum
+    
     @State private var isPresentingEditView = false
     var body: some View {
         List {
             Section(header: Text("Meeting Info")){
-                NavigationLink(destination:MeetingView(scrum: $scrum)){
+                NavigationLink(destination:MeetingView(scrum: scrum)){
                     Label("Start Meeting", systemImage: "timer")
                         .font(.headline)
                         .foregroundColor(.accentColor)
@@ -42,45 +44,59 @@ struct DetailView: View {
                 }
             }//section end
             
+            Section(header:Text("History")){
+                if scrum.history.isEmpty {
+                    Label("No meeting yet", systemImage: "calendar.badge.exclamationmark")
+                }else{
+                    ForEach(scrum.history){
+                        history in
+                        HStack{
+                            Image(systemName: "calendar")
+                            Text(history.date, style: .date)
+                        }
+                        
+                    }
+                }
+            }//section end
         }//list end
         .navigationTitle(scrum.title)
         .toolbar{
             Button{
                 isPresentingEditView = true
-                editingScrum = scrum
+               
             }label:{
                 Text("Edit")
             }
         }
         .sheet(isPresented: $isPresentingEditView, content: {
             NavigationStack{
-                DetailEditView(scrum: $editingScrum)
+                DetailEditView(scrum: scrum)
                     .navigationTitle(scrum.title)
-                    .toolbar{
-                        ToolbarItem(placement: .confirmationAction, content: {
-                            Button("Done") {
-                        isPresentingEditView = false
-                                scrum = editingScrum
-                                }
-                        })
-                        ToolbarItem(placement:.cancellationAction){
-                            Button{
-                                isPresentingEditView = false
-                            }label:{
-                                Text("Cancel")
-                            }
-                        }
-                        
-                    }
-            }
+//                    .toolbar{
+//                        ToolbarItem(placement: .confirmationAction, content: {
+//                            Button("Done") {
+//                        isPresentingEditView = false
+//                                scrum = editingScrum
+//                                }
+//                        })
+//                        ToolbarItem(placement:.cancellationAction){
+//                            Button{
+//                                isPresentingEditView = false
+//                            }label:{
+//                                Text("Cancel")
+//                            }
+//                        }
+//                        
+//                    }
+            }//nav stack
         })
        
     }
 }
 
-#Preview {
-    @Previewable @State var scrum = DailyScrum.sampleData[0]
-    NavigationStack{
-        DetailView(scrum:$scrum)
-    }
+#Preview(traits: .dailyScrumsSampleData) {
+    @Previewable @Query(sort: \DailyScrum.title) var scrums: [DailyScrum]
+      NavigationStack {
+          DetailView(scrum: scrums[0])
+      }
 }

@@ -7,15 +7,24 @@
 
 import ThemeKit
 import Foundation
+import SwiftData
 
-
-
-struct DailyScrum: Identifiable {
+@Model
+class DailyScrum: Identifiable {
     var id: UUID
     var title: String
+//    Both relationships use the .cascade delete rule, which indicates that if the parent object is deleted, the child objects are also deleted. Both relationships designate the dailyScrum property that you added earlier as their inverse relationship.
+    @Relationship(deleteRule: .cascade, inverse: \Attendee.dailyScrum)
     var attendees: [Attendee]
+    
+    @Relationship(deleteRule:.cascade, inverse: \History.dailyScrum)
+    var history : [History] = []
+    
+    
     var lengthInMinutes: Int
     var theme: Theme
+    
+ 
 //    By using a computed property, you can provide a getter to retrieve the scrum’s length as a double value and a setter to update the corresponding integer value when the slider changes.
     var lengthInMinutesAsDouble: Double {
         get {
@@ -35,23 +44,23 @@ struct DailyScrum: Identifiable {
            self.theme = theme
        }
 }
-extension DailyScrum{
-    struct Attendee : Identifiable {
-        let id: UUID
-        let name:String
-        init(id: UUID = UUID(), name: String) {
-            self.id = id
-            self.name = name
-        }
-    }
-//    Use a computed property when:
-//    You want a fresh new instance each time it’s accessed.
-//
-//    You might compute different values based on other logic (even if not currently).
-//
-//    You're defining a constant template that you want to use to generate new independent instances (e.g., an empty form).
-//
-//    This ensures that calling DailyScrum.emptyScrum gives a brand-new DailyScrum each time.
-    static var emptyScrum : DailyScrum
-    { DailyScrum(title: "", attendees: [], lengthInMinutes: 5, theme: .sky)}
-}
+//extension DailyScrum{
+//    struct Attendee : Identifiable {
+//        let id: UUID
+//        let name:String
+//        init(id: UUID = UUID(), name: String) {
+//            self.id = id
+//            self.name = name
+//        }
+//    }
+////    Use a computed property when:
+////    You want a fresh new instance each time it’s accessed.
+////
+////    You might compute different values based on other logic (even if not currently).
+////
+////    You're defining a constant template that you want to use to generate new independent instances (e.g., an empty form).
+////
+////    This ensures that calling DailyScrum.emptyScrum gives a brand-new DailyScrum each time.
+//    static var emptyScrum : DailyScrum
+//    { DailyScrum(title: "", attendees: [], lengthInMinutes: 5, theme: .sky)}
+//}
