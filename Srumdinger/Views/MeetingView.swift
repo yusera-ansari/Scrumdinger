@@ -9,13 +9,16 @@ import SwiftUI
 import TimerKit
 import AVFoundation
 import SwiftData
+import TranscriptionKit
 
 struct MeetingView: View {
     @Environment(\.modelContext) private var context
     private let player = AVPlayer.dingPlayer()
     @State var scrumTimer = ScrumTimer()
     let scrum : DailyScrum
+    var speechRecognizer : SpeechRecognizer = SpeechRecognizer()
     @Binding var errorWrapper: ErrorWrapper?
+    @State private var isRecording = false;
     var body: some View {
      
         ZStack{
@@ -25,7 +28,7 @@ struct MeetingView: View {
                 MeetingHeaderView(secondsElapsed: scrumTimer.secondsElapsed,
                                                 secondsRemaining: scrumTimer.secondsRemaining,
                                                 theme: scrum.theme)
-                MeetingTimerView(theme: scrum.theme, speakers: scrumTimer.speakers)
+                MeetingTimerView(theme: scrum.theme, isRecording: isRecording, speakers: scrumTimer.speakers)
                 MeetingFooterView(speakers: scrumTimer.speakers, skipAction: scrumTimer.skipSpeaker)
                       
             }//vstack
@@ -47,8 +50,12 @@ struct MeetingView: View {
         
     }//view
     func stopScrum()throws{
+
         scrumTimer.stopScrum()
-        let newHistory = History(attendees: scrum.attendees)
+        isRecording = false
+        speechRecognizer.stopTranscribing()
+      let newHistory = History(attendees: scrum.attendees,
+        transcript: speechRecognizer.transcript)
         scrum.history.insert(newHistory, at: 0);
         try context.save()
     }
@@ -59,6 +66,8 @@ struct MeetingView: View {
             player.play()
 //                Seeking to time .zero ensures that the audio file always plays from the beginning.
                    }
+        speechRecognizer.startTranscribing()
+        isRecording = true
         scrumTimer.startScrum()
     }
 }
