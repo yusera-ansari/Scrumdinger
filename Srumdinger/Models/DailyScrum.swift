@@ -11,7 +11,7 @@ import SwiftData
 
 @Model
 class DailyScrum: Identifiable {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var title: String
 //    Both relationships use the .cascade delete rule, which indicates that if the parent object is deleted, the child objects are also deleted. Both relationships designate the dailyScrum property that you added earlier as their inverse relationship.
     @Relationship(deleteRule: .cascade, inverse: \Attendee.dailyScrum)
